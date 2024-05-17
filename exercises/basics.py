@@ -49,17 +49,18 @@ def collatz(n: int) -> List[int]:
 
 def distinct_numbers(numbers: List[int]) -> int:
     # Todo
-    # check if the availble list is not null
-    # create a list of unqiue numbers
+    # check if the availble list is not null -- not nessary creats an infinit loop
+    # create a set of unqiue numbers
     # count the unique numbers
 
-    # list of unqiue numbers
-    Unnumbers = []
+    # set of unqiue numbers
+    Unnumbers = set()
 
 # chek to see if the availbe list is not null
-    number_of_items_in_list = len(numbers)
-    while( number_of_items_in_list != 0):
-       for i in numbers:
+    # number_of_items_in_list = len(numbers)
+    # while number_of_items_in_list != 0:
+
+    for i in numbers:
           Unnumbers.add(i)
 
     return len(Unnumbers)
