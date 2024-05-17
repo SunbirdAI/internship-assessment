@@ -1,14 +1,37 @@
 from typing import List
-
+# todo
+# create a list that stores the returned values
+# check if n is even first
+#  got to the odd part
+# wrap the logic in a loop
 
 def collatz(n: int) -> List[int]:
-    # check to see if n is even
-    result = n%2
-    while( n==1):
-     if(result == 0 ):
+    # list
+    returnedresults = [n]
+
+    # check if the current value of n is not 1 else iterate over the list
+    while( n !=1):
+     
+     
+    #  check if vaalue of n is even
+     if(n %2 == 0 ):
+        #  debugging
+        #  print("current value of n is ===== "+ n ) 
          n = n/2
+        #  if n is not even then perform the odd operation
      else:
         n = ((n*3)+1)
+
+    # append the results of each operation to our result sequence
+
+     returnedresults.append(n)
+    #  debugging
+    #  print(returnedresults)
+
+    return returnedresults
+
+
+
 
 
     """
