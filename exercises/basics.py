@@ -48,9 +48,29 @@ def collatz(n: int) -> List[int]:
 
 
 def distinct_numbers(numbers: List[int]) -> int:
-    """
-    You are given a list of integers (the list could be empty), calculate the number of distinct/unique values in the list.
+    # Todo
+    # check if the availble list is not null
+    # create a list of unqiue numbers
+    # count the unique numbers
 
-    E.g if numbers = [2, 3, 2, 2, 3], then the answer is 2 since there are only 2 unique numbers: 2 and 3.
+    # list of unqiue numbers
+    Unnumbers = []
+
+# chek to see if the availbe list is not null
+    number_of_items_in_list = len(numbers)
+    while( number_of_items_in_list != 0):
+       for i in numbers:
+          Unnumbers.add(i)
+
+    return len(Unnumbers)
+       
+ 
+
     """
-    pass
+    You are given a list of integers (the list could be empty),
+      calculate the number of distinct/unique values in the list.
+
+    E.g if numbers = [2, 3, 2, 2, 3], 
+    then the answer is 2 since there are only 2 unique numbers: 2 and 3.
+    """
+    
