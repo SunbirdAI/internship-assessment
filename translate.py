@@ -111,7 +111,52 @@ response = rq.post(url, headers=headers, json=data)
 
 print(response.json())
 
-# 
+
+
+# addED modern Ui of the results 
+
+import tkinter as tk
+from tkinter import font
+
+def create_window():
+    # Initialize the main window
+    root = tk.Tk()
+    root.title("LOYO MOSES SUNBIRD INTERNSHIP")
+    
+
+    root.geometry("900x600")  # Width x Height
+    root.configure(bg='#2C3E50')  # Dark blue background
+
+    # Define a custom font
+    custom_font = font.Font(family="Helvetica", size=22, weight="bold")
+    
+
+    # Create a frame to hold the paragraphs with a morphic background
+    frame = tk.Frame(root,  padx=10, pady=10)
+    frame.pack(padx=20, pady=20, fill='both', expand=True)
+
+ 
+    # Define the paragraphs
+    paragraphs = [
+          f"This is the selected source language code {source_language}. \n\n", 
+        f"This is the selected target language code {target_language}.\n\n",
+        f"This is the selected text for translation: {translate_text}.\n\n",
+        "Thank you for using Sunbird API.",
+
+    ]
+
+    # Add each paragraph to the frame
+    for paragraph in paragraphs:
+        label = tk.Label(frame, text=paragraph, font=custom_font,wraplength=260)
+        label.pack(pady=10)
+
+    # Start the main event loop
+    root.mainloop()
+
+# Run the function to create the window
+create_window()
+
+
 
 
 
