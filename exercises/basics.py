@@ -2,6 +2,15 @@ from typing import List
 
 
 def collatz(n: int) -> List[int]:
+    # check to see if n is even
+    result = n%2
+    while( n==1):
+     if(result == 0 ):
+         n = n/2
+     else:
+        n = ((n*3)+1)
+
+
     """
     You're given a positive integer n. Write an algorithm that does the following:
         - If n is even, the algorithm divides n by 2. This is the new value of n
@@ -12,7 +21,7 @@ def collatz(n: int) -> List[int]:
     For example, if n = 3, the sequence of values is: 3 -> 10 -> 5 -> 16 -> 8 -> 4 -> 2 -> 1
     So, your function would return: [3, 10, 5, 16, 8, 4, 2, 1]
     """
-    pass
+    
 
 
 def distinct_numbers(numbers: List[int]) -> int:
