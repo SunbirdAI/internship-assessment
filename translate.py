@@ -34,12 +34,12 @@ headers = {
 
 print("Choose Source Language Number: 1 FOR Engish, 2 FOR Luganda, 3 FOR Runyankole, 4 FOR Acholi, 5 FOR Acholi")
 
-source_language_num = input()
+source_language_num = int(input())
 
 
 print("Choose Target Language Number: 1 FOR Engish, 2 FOR Luganda, 3 FOR Runyankole, 4 FOR Acholi, 5 FOR Acholi")
 
-target_language_num = input()
+target_language_num = int(input())
 
 print("Enter Translation Text")
 
@@ -50,11 +50,12 @@ print("target lang", target_language_num)
 print("Translate text", translate_text)
 
 # Translation logic
-source_language =""
+source_language=""
 target_language=""
-translate_text=""
+
 
 if(source_language_num == 1):
+    print("worked here =================")
     source_language = "eng"
 
 
@@ -100,15 +101,17 @@ print( "target_language", target_language)
 print( "text", translate_text)
     
     
-# data = {
-#     "source_language": source_language,
-#     "target_language": target_language,
-#     "text": translate_text
-# }
+data = {
+    "source_language": source_language,
+    "target_language": target_language,
+    "text": translate_text
+}
 
-# response = rq.post(url, headers=headers, json=data)
+response = rq.post(url, headers=headers, json=data)
 
-# print(response.json())
+print(response.json())
+
+# 
 
 
 
