@@ -1,4 +1,19 @@
-# 🐦 Sunbird AI — Transcribe, Summarise & Translate
+---
+title: Sunbird AI App
+
+colorFrom: blue
+colorTo: yellow
+sdk: docker
+app_port: 8501
+pinned: false
+---
+
+
+
+
+
+
+#  Sunbird AI — Transcribe, Summarise & Translate
 
 A Generative AI web application powered by **Sunbird AI's Sunflower LLM** and Speech APIs. The app accepts English text or audio input, summarises it, translates the summary into a Ugandan local language, and generates a spoken audio output of the translation.
 
@@ -6,17 +21,15 @@ Built as part of the **Sunbird AI Internship Assessment**.
 
 ---
 
-## 🌍 Live Demo
+##  Live Demo
 
-👉 **[Try the app here](https://huggingface.co/spaces/your-username/sunbird-ai-app)**
-
-> Replace the link above with your actual Hugging Face Spaces URL after deployment.
+ **[Try the app here](https://kennedymutebi-sunbird-ai-app.hf.space)**
 
 ---
 
-## 📌 Project Description
+##  Project Description
 
-This application solves a real communication problem in Uganda — making English content accessible to people who speak local languages. 
+This application solves a real communication problem in Uganda — making English content accessible to people who speak local languages.
 
 A user can:
 - Type or paste English text, **or** upload a voice recording
@@ -27,7 +40,7 @@ All AI capabilities are powered exclusively by **Sunbird AI** — no OpenAI or A
 
 ---
 
-## 🏗️ Architecture Overview
+##  Architecture Overview
 
 The application follows a 4-step pipeline:
 
@@ -71,15 +84,15 @@ internship-assessment/
 │   └── test_basics.py       # Pytest tests for Part 1
 │
 ├── app.py                   # Streamlit frontend — the user interface
-├── .env                     # Secret API token (not committed to Git)
-├── .env.example             # Template showing required env variables
+├── Dockerfile               # Docker configuration for Hugging Face deployment
+├── .env.example             # Template showing required environment variables
 ├── requirements.txt         # Python dependencies
 └── README.md                # This file
 ```
 
 ---
 
-## ⚙️ Local Setup
+##  Local Setup
 
 Follow these steps exactly to run the app on your machine.
 
@@ -91,7 +104,7 @@ Follow these steps exactly to run the app on your machine.
 ### Step 1 — Clone the Repository
 
 ```bash
-git clone https://github.com/<your-username>/internship-assessment.git
+git clone https://github.com/kennedymutebi/internship-assessment.git
 cd internship-assessment
 ```
 
@@ -134,8 +147,6 @@ Open `.env` and add your Sunbird API token:
 ```
 SUNBIRD_API_TOKEN=your_actual_token_here
 ```
-
-See the **Environment Variables** section below for how to get your token.
 
 ### Step 5 — Run the App
 
@@ -197,8 +208,6 @@ Expected output:
 6. Wait for processing (10–20 seconds)
 7. View the **Summary**, **Translation**, and play the **Generated Audio**
 
----
-
 ### Audio Input Mode
 
 1. Select **Audio File** as your input type
@@ -247,26 +256,26 @@ Full API documentation: [https://docs.sunbird.ai](https://docs.sunbird.ai)
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Layer | Technology |
 |---|---|
 | Frontend / UI | Streamlit |
 | Backend | Python |
 | AI APIs | Sunbird AI (STT, Sunflower LLM, TTS) |
-| Deployment | Hugging Face Spaces |
+| Deployment | Hugging Face Spaces (Docker) |
 | Environment | python-dotenv |
 | HTTP Requests | requests |
 | Testing | pytest |
 
 ---
 
-## 👨‍💻 About the Developer
+##  About the Developer
 
 **Kennedy Mutebi**
-BSc Computer Science — Makerere University, Kampala Uganda
+BSc Computer Science — Makerere University,
 
-Full-stack developer with experience in React.js, Django, Python, and Flutter. Passionate about building technology that solves real African problems.
+Full-stack developer with experience in React.js, Django, Python, and Flutter. Passionate about building technology that solves real African problems and some project on git as you will see.
 
-- GitHub: [github.com/your-username](https://github.com/your-username)
+- GitHub: [github.com/kennedymutebi](https://github.com/kennedymutebi)
 - Email: kennedymutebi7@gmail.com
