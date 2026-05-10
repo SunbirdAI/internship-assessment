@@ -5,12 +5,12 @@ from backend.pipeline import run_pipeline
 # ── Page config ──────────────────────────────────────────────
 st.set_page_config(
     page_title="Sunbird AI App",
-    page_icon="🐦",
+    
     layout="centered"
 )
 
 # ── Title ─────────────────────────────────────────────────────
-st.title("🐦 Sunbird AI — Transcribe, Summarise & Translate")
+st.title(" Sunbird AI — Transcribe, Summarise & Translate")
 st.markdown("Convert audio or text into a summarised, translated audio in your local language.")
 
 st.divider()
@@ -80,11 +80,11 @@ if st.button("Run Pipeline", type="primary", use_container_width=True):
                     st.write(result["transcript"])
                     st.divider()
 
-                st.subheader("📋 Summary")
+                st.subheader(" Summary")
                 st.write(result["summary"])
                 st.divider()
 
-                st.subheader(f"🌍 Translation ({language})")
+                st.subheader(f" Translation ({language})")
                 st.write(result["translation"])
                 st.divider()
 
