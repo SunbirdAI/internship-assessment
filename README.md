@@ -1,139 +1,167 @@
-# Sunbird AI Internship Assessment Exercise
+---
+title: Sunbird AI Pipeline
+emoji: 🐦
+colorFrom: green
+colorTo: yellow
+sdk: gradio
+sdk_version: 6.14.0
+app_file: app.py
+pinned: false
+---
 
-This assessment consists of 3 parts:
-- Programming exercises.
-- Build a simple command line app using the Sunbird AI API.
+# Sunbird AI Pipeline
 
-## Getting started
-- Fork this repository to create your own copy. ([More info about forking a repository](https://docs.github.com/en/get-started/quickstart/fork-a-repo))
-- Clone your repository to access it locally: `git clone https://github.com/<your-username>/internship-assessment.git`. (Replace `<your-username>` with your Github username.)
-- Change directory into the `internship-assessment` folder after cloning the repository.
-- Create a python virtual environment: `python -m venv venv`
-- Activate the virtual environment: 
-  - Linux/Mac: `source venv/bin/activate`
-  - Windows: `venv\Scripts\activate.bat`
-- Install the required python packages: `pip install -r requirements.txt`
-- Run the command `pytest`. (The tests should be failing, it's your task to make them pass. See below for instructions)
+A Gradio web application that accepts text or audio...
+(rest of your existing README stays the same)
 
-## Part 1: Programming exercises
-There are 2 programming exercises designed to test your competency with the python programming language. 
+# Sunbird AI Pipeline
 
-You can find the starter code and task descriptions in the `exercises/basics.py` file in this repo.
+A Gradio web application that accepts text or audio, then runs it through a four-step AI pipeline — entirely powered by [Sunbird AI](https://sunbird.ai/) — to produce a translated, spoken summary in a Ugandan local language.
 
-Run the following command: `pytest`. You will see that all the tests are failing.
+---
 
-Your goal is to implement the 2 functions `collatz` and `distinct_numbers` to make the above failing tests pass.
+## Project description
 
-You can keep running the `pytest` command to see which tests are still failing and fix your code accordingly.
+This app lets a user provide either typed/pasted text or an uploaded audio file. If audio is supplied, it is first transcribed to text using Sunbird's Speech-to-Text API. The text (typed or transcribed) is then summarised using the Sunflower LLM, and the summary is translated into a chosen Ugandan local language — Luganda, Runyankole, Ateso, Lugbara, or Acholi — using the same LLM. Finally, the translated summary is synthesised as a playable audio clip via Sunbird's Text-to-Speech API. All four intermediate outputs (transcript, summary, translated summary, and audio player) are displayed directly in the UI, so the user can inspect every stage of the pipeline.
 
-## Part 2: Build a GenAI Application with Sunbird AI
+---
 
-Build a small **Generative AI web application** powered by Sunbird AI's [Sunflower LLM](https://sunflower.sunbird.ai/) and the [Sunbird AI API](https://docs.sunbird.ai/introduction).
-
-The application should let a user provide either **text** or an **audio file**, then run the input through this pipeline:
-
-1. **Input** — accept either typed/pasted text **or** an uploaded audio file.
-2. **Transcribe (audio only)** — if the input is audio, transcribe it to text using Sunbird's Speech-to-Text API.
-3. **Summarise** — summarise the text (typed input or transcribed text) using the Sunflower LLM.
-4. **Translate** — translate the summary into a chosen Ugandan local language (Luganda, Runyankole, Ateso, Lugbara, or Acholi) using the Sunflower LLM.
-5. **Synthesise speech** — generate an audio clip of the translated summary using Sunbird's Text-to-Speech API.
-6. **Output** — display the original text, the summary, the translated summary, and the generated audio (playable in the UI).
-
-### Tech stack requirements
-
-- **Backend:** Python (you may use FastAPI, Flask, or call the Sunbird API directly from your frontend framework — your choice).
-- **Frontend:** one of [Gradio](https://www.gradio.app/), [Streamlit](https://streamlit.io/), or [Next.js](https://nextjs.org/docs).
-- **APIs:** all AI capabilities **must** come from Sunbird AI. Do not call OpenAI, Anthropic, or any other model provider for the core pipeline.
-
-### Sunbird AI API references
-
-Read these docs carefully before implementing — they show the exact request/response shapes and authentication you'll need:
-
-- **Speech-to-Text (STT):** https://docs.sunbird.ai/guides/speech-to-text
-- **Text-to-Speech (TTS):** https://docs.sunbird.ai/guides/text-to-speech
-- **Summarisation & Translation (Sunflower Simple Inference):** https://docs.sunbird.ai/guides/sunflower-chat
-- **Full API reference:** https://docs.sunbird.ai/api-reference/introduction
-
-You will need a Sunbird AI API token. Sign up and obtain one from the [Sunbird AI API portal](https://api.sunbird.ai/), then store it in a `.env` file as `SUNBIRD_API_TOKEN` (or equivalent). **Never commit your token to git.**
-
-### Functional requirements
-
-- Input switching: the UI must clearly let the user choose between text input and audio upload.
-- Audio constraint: reject audio files longer than **5 minutes** with a clear error message.
-- Language picker: allow the user to select the target local language for the translated summary.
-- Visible intermediate results: the UI should show the transcript (when audio is used), the summary, the translated summary, and the generated audio player — not just the final audio.
-- Sensible error handling: surface API failures to the user instead of silently failing.
-
-### Suggested project layout
+## Architecture overview
 
 ```
-.
-├── app.py                  # entry point (Gradio/Streamlit) OR Next.js app/
-├── backend/
-│   ├── sunbird_client.py   # thin wrapper around Sunbird API endpoints
-│   ├── pipeline.py         # orchestrates STT -> summarise -> translate -> TTS
-│   └── ...
-├── requirements.txt        # or package.json if Next.js + Python backend
-├── .env.example            # document required env vars (no real secrets)
-└── README.md               # see Part 3
+User input
+  │
+  ├─ Text (typed / pasted) ──────────────────────────────┐
+  │                                                       │
+  └─ Audio file (.mp3 / .wav / .ogg / .m4a / .aac)       │
+         │                                                │
+         ▼  [audio path only]                             │
+  ┌──────────────────────┐                                │
+  │  Sunbird STT         │                                │
+  │  POST /tasks/stt     │                                │
+  │  multipart `audio`   │                                │
+  └────────┬─────────────┘                                │
+           │ transcript text                              │
+           └──────────────────────────────────────────► ──┘
+                                                          │
+                                                          ▼
+                                        ┌─────────────────────────────┐
+                                        │  Sunflower LLM — summarise  │
+                                        │  POST /tasks/sunflower_     │
+                                        │        simple               │
+                                        │  form-encoded `instruction` │
+                                        └───────────────┬─────────────┘
+                                                        │ summary
+                                                        ▼
+                                        ┌─────────────────────────────┐
+                                        │  Sunflower LLM — translate  │
+                                        │  POST /tasks/sunflower_     │
+                                        │        simple               │
+                                        │  form-encoded `instruction` │
+                                        └───────────────┬─────────────┘
+                                                        │ translated summary
+                                                        ▼
+                                        ┌─────────────────────────────┐
+                                        │  Sunbird TTS                │
+                                        │  POST /tasks/modal/tts      │
+                                        │  JSON `text` + `speaker_id` │
+                                        └───────────────┬─────────────┘
+                                                        │ signed audio URL
+                                                        ▼
+                                                  Audio player
 ```
 
-## Part 3: Documentation & Deployment
+| Step | Endpoint | Format |
+|---|---|---|
+| Speech-to-Text | `POST /tasks/stt` | `multipart/form-data`, field: `audio` |
+| Summarise | `POST /tasks/sunflower_simple` | `application/x-www-form-urlencoded`, field: `instruction` |
+| Translate | `POST /tasks/sunflower_simple` | same endpoint, different instruction prompt |
+| Text-to-Speech | `POST /tasks/modal/tts` | `application/json`, fields: `text`, `speaker_id` |
 
-A working app you can't run isn't a working app. For this part, you must (a) document your project so a reviewer can run it locally, and (b) deploy it publicly so we can try it without setting anything up.
+---
 
-### README requirements
+## Local setup
 
-Replace this README (or add a `PROJECT_README.md` next to it) with documentation that includes:
+```bash
+# 1. Clone the repository
+git clone https://github.com/GeorgeLukaanya/internship-assessment.git
+cd internship-assessment
 
-- **Project description** — one paragraph on what the app does.
-- **Architecture overview** — a short diagram or bullet list of the pipeline (input → STT → summarise → translate → TTS → output) and which Sunbird endpoints handle each step.
-- **Local setup** — exact, copy-pasteable steps to clone, install dependencies, configure environment variables (with a `.env.example` reference), and run the app locally.
-- **Environment variables** — list every required variable and what it does.
-- **Usage** — a short walkthrough showing the app being used end-to-end (screenshots are encouraged).
-- **Deployed link** — a public URL where reviewers can try the app.
-- **Known limitations** — anything that doesn't work, or constraints (e.g. 5-minute audio cap, supported languages).
+# 2. Create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate          # Linux / macOS
+# venv\Scripts\activate.bat       # Windows
 
-### Deployment
+# 3. Install dependencies
+pip install -r requirements.txt
 
-Deploy your app to a free hosting provider that fits your stack. Pick one:
+# 4. Configure environment variables
+cp .env.example .env
+# Edit .env and replace the placeholder with your real Sunbird AI API token
 
-#### Option A — Hugging Face Spaces (recommended for Gradio/Streamlit)
+# 5. Run the app
+python app.py
+# Opens at http://127.0.0.1:7860
+```
 
-1. Create a free account at https://huggingface.co/join.
-2. Create a new Space: https://huggingface.co/new-space — choose **Gradio** or **Streamlit** as the SDK and a public visibility.
-3. Add your Sunbird API token as a Space secret: Space settings → **Variables and secrets** → **New secret** → name it `SUNBIRD_API_TOKEN`.
-4. Push your code to the Space's git repo:
-   ```bash
-   git remote add space https://huggingface.co/spaces/<your-username>/<your-space-name>
-   git push space main
-   ```
-5. Hugging Face will build and deploy automatically. Confirm your `requirements.txt` lists every Python dependency and that your entry file matches the SDK convention (`app.py` for both Gradio and Streamlit).
+---
 
-Reference: https://huggingface.co/docs/hub/spaces-overview
+## Environment variables
 
-#### Option B — Vercel (recommended for Next.js + Python backend)
+| Variable | Required | Description |
+|---|---|---|
+| `SUNBIRD_API_TOKEN` | **Yes** | Bearer token for all Sunbird AI API calls. Get one at [api.sunbird.ai](https://api.sunbird.ai/). |
 
-1. Create a free account at https://vercel.com/signup and install the CLI: `npm i -g vercel@latest`.
-2. From your project root, link the project: `vercel link`.
-3. Add your Sunbird API token as an environment variable for all environments:
-   ```bash
-   vercel env add SUNBIRD_API_TOKEN
-   ```
-   (You'll be prompted to select Development, Preview, and Production — select all that apply.)
-4. Pull the env vars locally for development: `vercel env pull .env.local`.
-5. Deploy:
-   - Preview: `vercel`
-   - Production: `vercel --prod`
-6. If you have a Python backend (FastAPI/Flask), put it under an `api/` directory or a separate Python service — Vercel runs Python via Fluid Compute. See https://vercel.com/docs/functions/runtimes/python.
+Copy `.env.example` to `.env` and paste your token. The `.env` file is listed in `.gitignore` — never commit it.
 
-Reference: https://vercel.com/docs/getting-started-with-vercel
+```
+# .env.example
+SUNBIRD_API_TOKEN=your_token_here
+```
 
-### Submission
+---
 
-Your final submission must include:
+## Usage
 
-- A pull request (or repository link) with all your code.
-- An updated README that meets the requirements above.
-- **A working deployed link** that we can open and use end-to-end with at least one test input.
+### Text input
 
+1. Open the app (`http://127.0.0.1:7860` locally, or the deployed link below).
+2. Select the **Text input** tab.
+3. Pick a **Target language** from the dropdown (Luganda, Runyankole, Ateso, Lugbara, or Acholi).
+4. Paste or type your text into the text box.
+5. Click **Summarise & Translate**.
+6. After 3–6 minutes the results appear:
+   - **Summary** — concise English summary from the Sunflower LLM
+   - **Translated summary** — the summary in the chosen language
+   - **Synthesised speech** — an inline audio player for the translated summary
+
+### Audio upload
+
+1. Select the **Audio upload** tab.
+2. Pick a **Target language**.
+3. Upload an audio file (MP3, WAV, OGG, M4A, or AAC). Files longer than **5 minutes** are rejected immediately with an error message.
+4. Click **Transcribe, Summarise & Translate**.
+5. After 3–6 minutes the results appear:
+   - **Transcript** — the text returned by Sunbird STT
+   - **Summary**, **Translated summary**, and **Synthesised speech** as above
+
+> The Gradio button shows a spinner while the pipeline runs. Each run makes three sequential API calls (two LLM + one TTS), which accounts for the latency.
+
+---
+
+## Deployed link
+
+**[https://huggingface.co/spaces/musheijaa/sunbird-ai-pipeline](https://huggingface.co/spaces/musheijaa/sunbird-ai-pipeline)**
+
+The app is hosted on Hugging Face Spaces (Gradio SDK). The `SUNBIRD_API_TOKEN` is stored as a Space secret and is never exposed in the repository.
+
+---
+
+## Known limitations
+
+- **Slow inference** — The Sunflower LLM is called twice (summarise + translate) and TTS once per run. Total latency is typically **3–6 minutes**; this reflects the Sunbird API's inference speed, not the application itself.
+- **5-minute audio cap** — Audio longer than 300 seconds is rejected client-side before any API call is made.
+- **Supported languages** — Luganda, Runyankole, Ateso, Lugbara, Acholi. Swahili has a TTS voice (`speaker_id` 246) but is not a Ugandan local language and is excluded from the picker.
+- **English source text recommended** — The Sunflower LLM summarises most reliably from English. Quality may vary for other input languages.
+- **Free-tier account** — The `SUNBIRD_API_TOKEN` is a free-tier token; rate limits or quotas imposed by Sunbird AI may apply.
+- **Audio format detection** — Duration checking relies on `mutagen`. Uncommon or DRM-protected formats may bypass the local check; the Sunbird API enforces its own 100 MB / 10-minute limits as a fallback.

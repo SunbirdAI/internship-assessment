@@ -1,3 +1,5 @@
 pytest
 requests
 python-dotenv
+gradio
+mutagen
